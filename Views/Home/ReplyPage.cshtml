@@ -1,0 +1,84 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Hitech Traders</title>
+    <link rel="shortcut icon" type="image/png" href="~/img/logos/favicon.png" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", sans-serif;
+        }
+
+        .form-main {
+            background: linear-gradient(to bottom, #000000, #00000024), url(https://res.cloudinary.com/dqifboxk5/image/upload/v1686209968/contact-us-2_y8zzx7.jpg) no-repeat center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .form-main .main-wrapper {
+                border-radius: 10px;
+                padding: 45px;
+                width: 40%;
+            }
+
+                .form-main .main-wrapper .form-wrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    gap: 15px;
+                }
+
+                    .form-main .main-wrapper .form-wrapper .form-card {
+                        position: relative;
+                        width: 100%;
+                    }
+
+        .message-image {
+            text-align: center;
+        }
+
+            .message-image img {
+                margin: 0 auto;
+                width: 250px;
+                height: 250px;
+            }
+    </style>
+</head>
+<body>
+    <div class="form-main">
+        <div class="main-wrapper">
+            <form class="form-wrapper">
+                <div class="form-card text-center">
+                    <div class="message-image">
+                        <img src="https://i.ibb.co/Lkn7rkG/thank-you-envelope.png" alt="thank-you-envelope" border="0">
+                    </div>
+                    <h1 style="text-align:center;color:white;font-size:55px;margin:0">Thank you!</h1>
+                    <div style="text-align:center;color:white;font-size:16px">
+                        for contacting us, we will reply promptlyonce your message is after few minutes received.
+                    </div>
+                    <div style="text-align:center">
+                        <button style="background-color:#ffffffaf;border:none;padding:12px 22px;font-weight:600;font-size:16px;cursor:pointer">
+                            <a asp-controller="Home" asp-action="Index" style="color:#000;text-decoration:none;cursor:pointer">
+                                Goto Home
+                            </a>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Bid";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300" data-aos-easing="slide" data-aos-duration="800" data-aos-delay="0">
+    <div class="site-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                @{
+
+                    foreach (System.Data.DataRow dr in ViewBag.data.Rows)
+                    {
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="side-box mb-4">
+
+                                <p>
+                                    Price: <strong class="text-black">$@dr["price"].ToString()</strong> <br>
+                                    Number of Bids: <strong class="text-black">@dr["starting_bid"].ToString()</strong><br>
+                                    Condition: <strong class="text-black">@dr["condition"].ToString()</strong>
+                                </p>
+                                <form method="post">
+                                    <div class="mb-4">
+                                        <input type="text" class="form-control mb-2" name="bidder_name" fdprocessedid="m5egnh" placeholder="Bidder Name">
+                                        <input type="text" class="form-control mb-2" placeholder="Bid $0.00" name="bid_value" fdprocessedid="m5egnh">
+                                        <input type="date" class="form-control mb-2"  name="bid_time" fdprocessedid="m5egnh">
+                                        <input type="submit" class="btn btn-block btn-bid" fdprocessedid="8rceq" value="Submit a Bid">
+                                        <span class="d-block text-center my-2">or</span>
+                                        <button class="btn btn-primary-main btn-block" fdprocessedid="yy8q09">Buy Now</button>
+                                    </div>
+                                </form>
+                            </div>
+                            @{
+                                foreach (System.Data.DataRow row in ViewBag.owner.Rows)
+                                {
+                                    
+                            <div class="side-box text-center">
+                                <img src="~/img/homepage/asset 13.jpeg" alt="Image" class="img-fluid w-50 rounded-circle mb-4">
+                                        <h3 class="h5 text-black">@row["name"].ToString()</h3>
+                                        <span class="mb-3 d-block text-muted">@row["email"].ToString()</span>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repudiandae recusandae, incidunt possimus provident vel facilis!</p>
+                            </div>
+                                }
+                            }
+
+                        </div>
+                        <div class="col-lg-8 px-lg-5">
+                            <div class="owl-carousel  slide-one-item mb-5 owl-loaded owl-drag">
+                                <div class="owl-stage-outer">
+                                    <div class="owl-stage" style="">
+                                        <div class="owl-item" style="width: 693.8px;">
+                                            <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-54">
+                                        </div>
+                                        <div class="owl-item" style="width: 693.8px;">
+                                            <img src="~/img/homepage/asset 2.jpeg" alt="Image" class="img-fluid mb-54">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>@dr["description"].ToString()</p>
+
+                            <h2 class="my-4">Bidders</h2>
+                            <ul class="list-unstyled bidders">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <span class="mx-2">1.</span>
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                            <span>Jean Smith</span>
+                                        </div>
+                                    </div>
+                                    <span class="price">$40</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <span class="mx-2">2.</span>
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/img/homepage/asset 11.jpeg" alt="Image" class="mx-2">
+                                            <span>Chris Wilson</span>
+                                        </div>
+                                    </div>
+                                    <span class="price">$87</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <span class="mx-2">3.</span>
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/img/homepage/asset 12.jpeg" alt="Image" class="mx-2">
+                                            <span>Kyle Anderson</span>
+                                        </div>
+                                    </div>
+                                    <span class="price">$310</span>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</body>
+

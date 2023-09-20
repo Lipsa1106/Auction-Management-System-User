@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewData["Title"] = "Update_product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (System.Data.DataRow dr in ViewBag.data.Rows)
+{
+    <form method="post">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Product Name</label>
+            <input type="text" class="form-control" name="product_name" value="@dr["product_name"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Brand</label>
+            <input type="text" class="form-control" name="brand" value="@dr["brand"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Colour</label>
+            <input type="text" class="form-control" name="color" value="@dr["color"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Condition</label>
+            <input type="text" class="form-control" name="condition" value="@dr["condition"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Description</label>
+            <input type="text" class="form-control" name="description" value="@dr["description"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Starting Bid</label>
+            <input type="number" class="form-control" name="starting_bid" value="@dr["starting_bid"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Price</label>
+            <input type="number" class="form-control" name="price" value="@dr["price"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Product Image</label>
+            <input type="file" class="form-control" name="product_image" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Start Time</label>
+            <input type="date" class="form-control" name="start_time" value="@dr["start_time"].ToString()" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">End Time</label>
+            <input type="date" class="form-control" name="end_time" value="@dr["end_time"].ToString()" required>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Update Product" />
+    </form>
+}
+

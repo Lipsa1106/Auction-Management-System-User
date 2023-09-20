@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="intro-section" style="background-image: url('/img/homepage/background.jpg');">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-7 mx-auto text-center aos-init aos-animate" data-aos="fade-up">
+                <h1>Our Blog</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, nihil.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="site-section pb-0">
+    <div class="container ">
+        <div class="row">
+            @foreach (System.Data.DataRow dr in ViewBag.data.Rows)
+            {
+                <div class="col-lg-4 mb-5">
+                    <div class="news-entry-item">
+                        <a href="#" class="thumbnail">
+                            <img src="~/img/blog/1.webp" alt="Image" class="img-fluid">
+                            <div class="date">
+                                @dr["b_date"].ToString()
+                            </div>
+                        </a>
+                        <h3 class="mb-0"><a href="#">@dr["b_title"].ToString()</a></h3>
+                        <div class="mb-3">
+                            by <a href="#">@dr["b_name"].ToString()</a> at Colorlib
+                        </div>
+                        <p>@dr["b_description"].ToString()</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

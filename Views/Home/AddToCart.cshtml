@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "AddToCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container my-5">
+    <div class="row auctions-entry my-3">
+        @{
+            int counter = 0;
+            @foreach (System.Data.DataRow dr in ViewBag.cartdata.Rows)
+            {
+                counter++;
+
+            }
+        }
+        <h6 class="fs-5 text-muted">Total Product: @counter</h6>
+
+        @foreach (System.Data.DataRow dr in ViewBag.cartdata.Rows)
+        {
+            @if (@dr["cart"].ToString() == "True")
+            {
+                <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
+                    <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
+                        <div class="border-bottom">
+                            <strong class="price">$@dr["price"].ToString()</strong>
+                            <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-0" />
+                        </div>
+                        <div class="">
+                            <h3><a asp-controller="Home" asp-action="Bid">@dr["product_name"].ToString()</a></h3>
+                            <div class="d-flex mb-2 justify-content-between text-color">
+                                <span>@dr["description"].ToString()</span>
+                                <span>@dr["condition"].ToString()</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-color">
+                                <span class="ml-auto">Starting Bid : @dr["starting_bid"].ToString()$</span>
+                            </div>
+                            @Html.ActionLink("Remove Cart","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="btn btn-primary-main text-white px-2 py-1" })
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+
+        }
+
+        @{
+            int total = 0;
+            int coutnet = 0;
+            <table class="table mt-5">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow dr in ViewBag.cartdata.Rows)
+                    {
+                        coutnet++;
+                        total = total + Convert.ToInt32(dr["price"]);
+                        <tr>
+                            <th scope="row">@coutnet</th>
+                            <td>@dr["product_name"]</td>
+                            <td>@dr["price"]</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="2" class="fw-bold">Total Amount : <span class="fs-4">@total</span>  </td>
+                        <td class="text-end"><button class="btn btn-primary-main">Make Payment</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
