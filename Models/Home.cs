@@ -7,7 +7,7 @@ namespace demo.Models
 {
     public class Home
     {
-        SqlConnection con = new SqlConnection("Data Source=.\\SQLExpress;Database=hi-tech;User Id=sa;pwd=336633");
+        SqlConnection con = new SqlConnection("Data Source=.\\SQLExpress;Database=hi-tech;User Id=sa;pwd=palak@123");
         public string name { get; set; }
         public string email { get; set; }
         public string password { get; set; }
@@ -38,10 +38,10 @@ namespace demo.Models
             con.Open();
             return cmd.ExecuteNonQuery();
         }
-        public int upload_product(int user_id, int total_product, int num_product,int num_bid,int total_bid)
+        public int upload_product(int user_id, int total_product, int num_product)
         {
             con.Close();
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[UploadProduct] (user_id,total_product,num_product,num_bid,total_bid)values('" + user_id + "','" + total_product + "','" + num_product + "','"+num_bid+"','"+total_bid+"')", con);
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[UploadProduct] (user_id,total_product,num_product)values('" + user_id + "','" + total_product + "','" + num_product + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
@@ -127,17 +127,9 @@ namespace demo.Models
         }
         public int SubmitBid(int id, int product_id, string bid_value, string bid_time, string bidder_name)
         {
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[SubmitBid1] (user_id,product_id,bid_value,bid_time,bidder_name)values('" + id + "','" + product_id + "','" + bid_value + "','" + bid_time + "','" + bidder_name + "') ", con);
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[SubmitBid] (user_id,product_id,bid_value,bid_time,bidder_name)values('" + id + "','" + product_id + "','" + bid_value + "','" + bid_time + "','" + bidder_name + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
-        }
-        public DataSet selectBid(int pId,int uId)
-        {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where product_id='"+ pId + "' and user_id='"+uId+"'", con);
-            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
-            DataSet ds = new DataSet();
-            dn.Fill(ds);
-            return ds;
         }
         public int delete_product(int id)
         {
@@ -218,12 +210,21 @@ namespace demo.Models
             con.Open();
             return cmd.ExecuteNonQuery();
         }
-        public int updateRemainingBid(int bid, int id)
+        public DataSet allplan()
         {
-            con.Close();
-            SqlCommand cmd = new SqlCommand("update [dbo].[UploadProduct] set num_bid ='" + bid + "' where user_id='" + id + "'", con);
-            con.Open();
-            return cmd.ExecuteNonQuery();
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[PackageMaster] ", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
+        }
+        public DataSet all_plan(int id)
+        {
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[PackageMaster]  where id = '" + id + "'", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
         }
     }
 }

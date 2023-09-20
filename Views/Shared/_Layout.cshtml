@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.carousel.min.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
+    <style>
+        
+    </style>
 </head>
 <body>
     <header>
@@ -80,6 +83,7 @@
                                     @if (TempData.Peek("id") != null)
                                     {
                                         <li><a style="color:white !important" asp-action="Product" asp-controller="Home">Your Product</a></li>
+                                        <li><a style="color:white !important" asp-action="SubPlan" asp-controller="Home">Subscription</a></li>
                                     }
 
                                 </ul>
@@ -287,7 +291,51 @@
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
     <script src="~/js/slider.js"></script>
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var orderId = "@ViewBag.orderId"
+        var options = {
+            "name": "Code2night",
+            "description": "Payment using Razorpay",
+            "order_id": orderId,
+            "image": "https://www.code2night.com/Content/code2night-C.png",
+            "prefill": {
+                "name": "Code2night",
+                "email": "code2nightblog@gmail.com",
+                "contact": "+919999999888",
+            },
+            "notes": {
+                "address": "Test Payment"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        }
+        // Boolean whether to show image inside a white frame. (default: true)
+        options.theme.image_padding = false;
+        options.handler = function (response) {
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_order_id').value = orderId;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+            document.razorpayForm.submit();
+        };
+        options.modal = {
+            ondismiss: function () {
+                console.log("This code runs when the popup is closed");
+            },
+            // Boolean indicating whether pressing escape key
+            // should close the checkout form. (default: true)
+            escape: true,
+            // Boolean indicating whether clicking translucent blank
+            // space outside checkout form should close the form. (default: false)
+            backdropclose: false
+        };
+        var rzp = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp.open();
+            e.preventDefault();
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

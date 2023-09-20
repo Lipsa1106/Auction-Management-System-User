@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <form  method="post" name="razorpayForm">
+        <input id="razorpay_payment_id" type="text" name="razorpay_payment_id" />
+        <input id="razorpay_order_id" type="text" name="razorpay_order_id" />
+        <input id="razorpay_signature" type="text" name="razorpay_signature" />
+        <input type="submit" id="rzp-button1" style="margin-top:20px" value="CheckOut"/>
+    </form>
+        
+</div>
+
