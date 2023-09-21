@@ -118,8 +118,27 @@ namespace HiTech.Controllers
                 ViewBag.data = dataSet.Tables[0];
                 foreach (System.Data.DataRow row in ViewBag.data.Rows)
                 {
-                    DataSet bid = user.selectBidder1(id);
+                    DataSet bid = user.winnerBid(id);
                     ViewBag.BidData = bid.Tables[0];
+                    int counter = 0;
+                    foreach (System.Data.DataRow dr in ViewBag.BidData.Rows)
+                    {
+                        counter++;
+                    }
+                    if (counter == 10)
+                    {
+                        DataSet win = user.winner(id);
+                        ViewBag.winnr = win.Tables[0];
+                        foreach (System.Data.DataRow row1 in ViewBag.winnr.Rows)
+                        {
+                            int winerId = Convert.ToInt32(row1["bid_id"]);
+                            int add = user.updateWinner(winerId);
+                            if(add != 0)
+                            {
+                                user.updateAuction(id);
+                            }
+                        }
+                    }
                     user_id = Convert.ToInt32(row["user_id"]);
                     DataSet ds = user.owner(user_id);
                     ViewBag.owner = ds.Tables[0];

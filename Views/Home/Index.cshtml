@@ -26,6 +26,9 @@
                 <div class="row auctions-entry my-3">
                     @foreach (System.Data.DataRow dr in ViewBag.data.Rows)
                     {
+                        @if (@dr["status"].ToString() == "True")
+                        {
+                            
                         <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
                             <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
                                 <div class="border-bottom">
@@ -45,11 +48,8 @@
                                         @Html.ActionLink("Submit a Bid","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
 
                                         <div class="">
-                                            @if (@dr["cart"].ToString() == "false")
-                                            {
                                                 @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
 
-                                            }
                                             @if (@dr["wishList"].ToString() == "false")
                                             {
                                                 @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
@@ -65,6 +65,7 @@
 
                             </div>
                         </div>
+                        }
 
                     }
                 </div>
@@ -80,6 +81,9 @@
                 <div class="row auctions-entry my-3">
                     @foreach (System.Data.DataRow dr in ViewBag.Normal.Rows)
                     {
+                        @if (@dr["status"].ToString() == "True")
+                        {
+                            
                         <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
                             <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
                                 <div class="border-bottom">
@@ -121,7 +125,7 @@
                                 </div>
 
                             </div>
-                        </div>
+                        }
 
                     }
                 </div>
