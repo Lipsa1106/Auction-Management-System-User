@@ -44,21 +44,15 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         @Html.ActionLink("Submit a Bid","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
 
-                                        <div class="">
-                                            @if (@dr["cart"].ToString() == "false")
-                                            {
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-2">
                                                 @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
 
-                                            }
-                                            @if (@dr["wishList"].ToString() == "false")
-                                            {
+                                            </div>
+                                            <div>
                                                 @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
-                                            }
-                                            else
-                                            {
-                                                @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-heart" })
 
-                                            }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -97,30 +91,26 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         @Html.ActionLink("Buy","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
-
-                                        <div class="">
-                                            @if (@dr["cart"].ToString() == "false")
-                                            {
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-2">
                                                 @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
-
-                                                }
                                             </div>
-                                            <div>
-                                                @if (@dr["wishList"].ToString() == "false")
-                                                {
-                                                    @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
-                                                }
-                                                else
-                                                {
-                                                    @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-heart" })
+                                            @*    <div>
+                                        @if (@dr["wishList"].ToString() == "false")
+                                        {
+                                        @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
+                                        }
+                                        else
+                                        {
+                                        @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-heart" })
 
-                                                }
-                                            </div>
+                                        }
+                                        </div> *@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
+
                         </div>
 
                     }
