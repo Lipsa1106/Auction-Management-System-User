@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "ProductInsert";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -7,63 +6,60 @@
 <div class="site-section">
     <div class="container">
 
-<form method="post">
-    <div class="row my-2">
-        <div class="col-md-6 form-group">
-            <label for="product_name">Product Name*</label>
-            <input type="text" name="product_name" id="fname" class="form-control form-control-lg" required>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="brand">Brand*</label>
-            <input type="text" name="brand" id="brand" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-md-6 form-group">
-            <label for="color">Color*</label>
-            <input type="text" name="color" id="color" class="form-control form-control-lg" required>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="condition">Condition*</label>
-            <input type="text" name="condition" id="condition" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-md-12 form-group">
-            <label for="description">Description*</label>
-            <input type="text" name="description" id="description" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-md-12 form-group">
-            <label for="startingbid">Starting Bid*</label>
-            <input type="number" name="starting_bid" id="startingbid" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-md-12 form-group">
-            <label for="price">Price*</label>
-            <input type="number" name="price" id="price" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-md-12 form-group">
-            <label for="starttime">Start Time*</label>
-            <input type="date" name="start_time" id="starttime" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-md-12 form-group">
-            <label for="endtime">End Time*</label>
-            <input type="date" name="end_time" id="endtime" class="form-control form-control-lg" required>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 ">
-            <input type="submit" value="Add Product" class="btn btn-primary-main " style="width:unset">
-        </div>
-    </div>
-</form>
+        <form method="post">
+            <div class="row my-2">
+                <div class="col-md-6 form-group">
+                    <label for="product_name">Product Name*</label>
+                    <input type="text" name="product_name" id="fname" class="form-control form-control-lg" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="brand">Brand*</label>
+                    <input type="text" name="brand" id="brand" class="form-control form-control-lg" required>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-md-6 form-group">
+                    <label for="color">Color*</label>
+                    <input type="text" name="color" id="color" class="form-control form-control-lg" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="condition">Condition*</label>
+                    <input type="text" name="condition" id="condition" class="form-control form-control-lg" required>
+                </div>
+            </div>
+            <div class="row my-2">
+                <label for="description">Product Type*</label>
+                <select class="form-select" name="pType" aria-label="Default select example">
+                    <option selected>Open this for Select Prodcut Type</option>
+                    <option value="auction">Auction</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
+
+            <div class="row my-2">
+                <div class="col-md-12 form-group">
+                    <label for="description">Description*</label>
+                    <input type="text" name="description" id="description" class="form-control form-control-lg" required>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-md-12 form-group">
+                    <label for="startingbid">Starting Bid*</label>
+                    <input type="number" name="starting_bid" id="startingbid" class="form-control form-control-lg" required>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-md-12 form-group">
+                    <label for="price">Price*</label>
+                    <input type="number" name="price" id="price" class="form-control form-control-lg" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 ">
+                    <input type="submit" value="Add Product" class="btn btn-primary-main " style="width:unset">
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 

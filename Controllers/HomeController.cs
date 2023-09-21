@@ -32,6 +32,8 @@ namespace HiTech.Controllers
 
             DataSet ds = user.allproduct();
             ViewBag.data = ds.Tables[0];
+            DataSet dataset = user.NormalProduct();
+            ViewBag.Normal = dataset.Tables[0];
             return View();
         }
         [HttpGet]
@@ -74,7 +76,6 @@ namespace HiTech.Controllers
             }
             return View();
         }
-        [HttpPost]
         public IActionResult Register(Home rg)
         {
             string name = rg.name;
@@ -82,19 +83,28 @@ namespace HiTech.Controllers
             string password = rg.password;
             int total = 2;
             int num = 0;
-            int dataAdd = rg.register(name, email, password);
-            int id = Convert.ToInt32(TempData["id"]);
-            if (dataAdd != 0)
+            int totalBid = 5;
+            try
             {
-
-                DataSet user = rg.SelectLastRecord();
-                ViewBag.id = user.Tables[0];
+                int dataAdd = rg.register(name, email, password);
+                int id = Convert.ToInt32(TempData["id"]);
+                if (dataAdd != 0)
+                {
+                    DataSet user = rg.SelectLastRecord();
+                    ViewBag.id = user.Tables[0];
+                }
+                foreach (System.Data.DataRow row in ViewBag.id.Rows)
+                {
+                    id = Convert.ToInt32(row["id"]);
+                }
+                rg.upload_product(id, total, num, num, totalBid);
             }
-            foreach (System.Data.DataRow row in ViewBag.id.Rows)
+            catch
             {
-                id = Convert.ToInt32(row["id"]);
+                string message = "Email is alredy taken";
+                ViewBag.errorMessage = message;
+                return RedirectToAction("ErrorMessageProduct");
             }
-            rg.upload_product(id, total, num);
             return RedirectToAction("Login");
         }
         [HttpGet]
@@ -103,17 +113,18 @@ namespace HiTech.Controllers
             int user_id;
             if (TempData.Peek("id") != null)
             {
+
                 DataSet dataSet = user.select_product(id);
                 ViewBag.data = dataSet.Tables[0];
                 foreach (System.Data.DataRow row in ViewBag.data.Rows)
                 {
+                    DataSet bid = user.selectBidder1(id);
+                    ViewBag.BidData = bid.Tables[0];
                     user_id = Convert.ToInt32(row["user_id"]);
                     DataSet ds = user.owner(user_id);
                     ViewBag.owner = ds.Tables[0];
                 }
-
                 return View();
-
             }
             return RedirectToAction("Login");
         }
@@ -121,10 +132,38 @@ namespace HiTech.Controllers
         public IActionResult Bid(Home user, int id)
         {
             int user_id = int.Parse((string)TempData.Peek("id"));
-            user.SubmitBid(user_id, id, user.bid_value, user.bid_time, user.bidder_name);
-            return RedirectToAction("Index");
-        }
+            DataSet ds = user.SlectNumProduct(user_id);
+            ViewBag.remainingBid = ds.Tables[0];
+            foreach (System.Data.DataRow row in ViewBag.remainingBid.Rows)
+            {
+                if (Convert.ToInt32(row["num_bid"]) < Convert.ToInt32(row["total_bid"]))
+                {
+                    int RemainingBid = Convert.ToInt32(row["num_bid"]);
 
+                    int number = user.SubmitBid(user_id, id, user.bid_value, user.bid_time, user.bidder_name);
+                    if (number > 0)
+                    {
+                        int remain = RemainingBid + 1;
+                        user.updateRemainingBid(remain, user_id);
+                    }
+                    else
+                    {
+                        return RedirectToAction("ErrorMessageBid");
+                    }
+
+                }
+            }
+            return RedirectToAction("Bid");
+
+        }
+        public IActionResult ErrorMessageBid()
+        {
+            return View();
+        }
+        public IActionResult ErrorMessageProduct()
+        {
+            return View();
+        }
         public IActionResult AboutUs(Home user)
         {
             DataSet ds = user.allTeam();
@@ -145,6 +184,8 @@ namespace HiTech.Controllers
         {
             DataSet ds = user.allproduct();
             ViewBag.data = ds.Tables[0];
+            DataSet dataset = user.NormalProduct();
+            ViewBag.Normal = dataset.Tables[0];
             return View();
         }
         [HttpGet]
@@ -215,29 +256,43 @@ namespace HiTech.Controllers
             ViewBag.remainingProduct = ds.Tables[0];
             foreach (System.Data.DataRow row in ViewBag.remainingProduct.Rows)
             {
-                if (Convert.ToInt32(row["num_product"]) < 2)
+                if (Convert.ToInt32(row["num_product"]) < Convert.ToInt32(row["total_product"]))
                 {
                     int product = Convert.ToInt32(row["num_product"]);
-                    int number = add.productInsert(add.product_name, id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.start_time, add.end_time, add.report, add.cart);
+                    int number = add.productInsert(add.product_name, id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.PType);
                     if (number != 0)
                     {
                         int remain = product + 1;
                         add.updateRemaining(remain, id);
                     }
-                    return RedirectToAction("Product");
+                }
+                else
+                {
+                    return RedirectToAction("ErrorMessageProduct");
                 }
             }
-                    return RedirectToAction("SubPlan");
+            return RedirectToAction("Product");
         }
         [HttpGet]
         public IActionResult ReplyPage(Home user)
         {
-
             return View();
         }
         public IActionResult Delete_product(Home db, int id = 0)
         {
-            db.delete_product(id);
+            int userId = int.Parse((string)TempData.Peek("id"));
+            DataSet ds = db.SlectNumProduct(userId);
+            ViewBag.remainingProduct = ds.Tables[0];
+            foreach (System.Data.DataRow row in ViewBag.remainingProduct.Rows)
+            {
+                int product = Convert.ToInt32(row["num_product"]);
+                int number = db.delete_product(id);
+                if (number != 0)
+                {
+                    int remain = product - 1;
+                    db.updateRemaining(remain, userId);
+                }
+            }
             return RedirectToAction("Product");
         }
         [HttpGet]
@@ -258,17 +313,13 @@ namespace HiTech.Controllers
         [HttpGet]
         public IActionResult Bidder(Home user, int id, int a = 0)
         {
-            int user_id;
+            int user_id = int.Parse((string)TempData.Peek("id"));
+            DataSet db = user.selectBidder(id, user_id);
+            ViewBag.bidder = db.Tables[0];
             DataSet dataSet = user.select_product(id);
             ViewBag.data = dataSet.Tables[0];
-            foreach (System.Data.DataRow row in ViewBag.data.Rows)
-            {
-                user_id = Convert.ToInt32(row["user_id"]);
-                DataSet ds = user.owner(user_id);
-                ViewBag.owner = ds.Tables[0];
-            }
-            DataSet db = user.selectBidder(id);
-            ViewBag.bidder = db.Tables[0];
+            DataSet ds = user.owner(user_id);
+            ViewBag.owner = ds.Tables[0];
             return View();
         }
         [HttpGet]

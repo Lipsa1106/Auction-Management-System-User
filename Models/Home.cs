@@ -7,7 +7,7 @@ namespace demo.Models
 {
     public class Home
     {
-        SqlConnection con = new SqlConnection("Data Source=.\\SQLExpress;Database=hi-tech;User Id=sa;pwd=palak@123");
+        SqlConnection con = new SqlConnection("Data Source=.\\SQLExpress;Database=hi-tech;User Id=sa;pwd=336633");
         public string name { get; set; }
         public string email { get; set; }
         public string password { get; set; }
@@ -32,16 +32,17 @@ namespace demo.Models
         public int num_product { get; set; }
         public string report { get; set; }
         public string cart { get; set; }
+        public string PType { get; set; }
         public int register(string name, string email, string password)
         {
             SqlCommand cmd = new SqlCommand("insert into [dbo].[Register] (name,email,password,status,report)values('" + name + "','" + email + "','" + password + "','" + true + "','" + false + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
-        public int upload_product(int user_id, int total_product, int num_product)
+        public int upload_product(int user_id, int total_product, int num_product, int num_bid, int total_bid)
         {
             con.Close();
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[UploadProduct] (user_id,total_product,num_product)values('" + user_id + "','" + total_product + "','" + num_product + "')", con);
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[UploadProduct] (user_id,total_product,num_product,num_bid,total_bid)values('" + user_id + "','" + total_product + "','" + num_product + "','" + num_bid + "','" + total_bid + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
@@ -72,16 +73,24 @@ namespace demo.Models
         }
         public DataSet allproduct()
         {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[Table_1] ", con);
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[Table_1] where pType='" + "auction" + "' ", con);
             SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
             DataSet ds = new DataSet();
             dn.Fill(ds);
             return ds;
         }
-        public int productInsert(string name, int id, string brand, string color, string conditin, string des, string bid, string price, string start, string end, string report, string cart)
+        public DataSet NormalProduct()
         {
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[Table_1] (product_name,user_id,brand,color,condition,description,starting_bid,price,start_time,end_time,status,report,cart,wishlist,auctionLive)values('" + name + "','" + id + "','" + brand + "','" + color + "','" + conditin + "','" + des + "','" + bid + "','" + price + "','" + start + "','" + end + "','" + false + "','" + "False" + "','" + "false" + "','" + "false" + "','"+
-                "true"+"')", con);
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[Table_1] where pType='" + "normal" + "' ", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
+        }
+        public int productInsert(string name, int id, string brand, string color, string conditin, string des, string bid, string price, string pType)
+        {
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[Table_1] (product_name,user_id,brand,color,condition,description,starting_bid,price,status,report,cart,wishlist,auctionLive,pType)values('" + name + "','" + id + "','" + brand + "','" + color + "','" + conditin + "','" + des + "','" + bid + "','" + price + "','" + false + "','" + "False" + "','" + "false" + "','" + "false" + "','" +
+                "true" + "','" + pType + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
 
@@ -127,7 +136,16 @@ namespace demo.Models
         }
         public int SubmitBid(int id, int product_id, string bid_value, string bid_time, string bidder_name)
         {
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[SubmitBid1] (user_id,product_id,bid_value,bid_time,bidder_name)values('" + id + "','" + product_id + "','" + bid_value + "','" + bid_time + "','" + bidder_name + "')", con);
+            con.Close();
+            SqlCommand cmd = new SqlCommand("IF EXISTS " +
+                "(SELECT * from [dbo].[SubmitBid1] where user_id='" + id + "' and product_id='" + product_id + "')" +
+                " BEGIN " +
+                "SELECT '" + 0 + "' " +
+                "END " +
+                "ELSE " +
+                "BEGIN " +
+                "insert into [dbo].[SubmitBid1](user_id,product_id,bid_value,bid_time,bidder_name,winner)values('" + id + "','" + product_id + "','" + bid_value + "','" + bid_time + "','" + bidder_name + "','" + "false" + "') " +
+                "END", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
@@ -151,9 +169,17 @@ namespace demo.Models
             dn.Fill(ds);
             return ds;
         }
-        public DataSet selectBidder(int id)
+        public DataSet selectBidder(int id, int user_id)
         {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "' ", con);
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "' and user_id='" + user_id + "' ", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
+        }
+        public DataSet selectBidder1(int id)
+        {
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "'", con);
             SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
             DataSet ds = new DataSet();
             dn.Fill(ds);
@@ -225,6 +251,13 @@ namespace demo.Models
             DataSet ds = new DataSet();
             dn.Fill(ds);
             return ds;
+        }
+        public int updateRemainingBid(int bid, int id)
+        {
+            con.Close();
+            SqlCommand cmd = new SqlCommand("update [dbo].[UploadProduct] set num_bid ='" + bid + "' where user_id='" + id + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
         }
     }
 }
