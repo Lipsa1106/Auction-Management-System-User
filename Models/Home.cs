@@ -127,7 +127,7 @@ namespace demo.Models
         }
         public int SubmitBid(int id, int product_id, string bid_value, string bid_time, string bidder_name)
         {
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[SubmitBid] (user_id,product_id,bid_value,bid_time,bidder_name)values('" + id + "','" + product_id + "','" + bid_value + "','" + bid_time + "','" + bidder_name + "')", con);
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[SubmitBid1] (user_id,product_id,bid_value,bid_time,bidder_name)values('" + id + "','" + product_id + "','" + bid_value + "','" + bid_time + "','" + bidder_name + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
@@ -153,7 +153,7 @@ namespace demo.Models
         }
         public DataSet selectBidder(int id)
         {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid] where  product_id = '" + id + "' ", con);
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "' ", con);
             SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
             DataSet ds = new DataSet();
             dn.Fill(ds);

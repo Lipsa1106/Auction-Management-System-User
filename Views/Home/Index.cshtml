@@ -45,22 +45,25 @@
                                         <div class="btn btn-bid">
                                             @Html.ActionLink("Submit a Bid","Bid", new {Id = dr["id"].ToString()})
                                         </div>
+                                        <div class="d-flex">
+                                            <div class="me-2">
+                                                @if (@dr["cart"].ToString() == "false")
+                                                {
+                                                    @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
 
-                                        <div class="">
-                                            @if (@dr["cart"].ToString() == "false")
-                                            {
-                                                @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
+                                                }
+                                            </div>
+                                            <div>
+                                                @if (@dr["wishList"].ToString() == "false")
+                                                {
+                                                    @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-heart" })
 
-                                            }
-                                            @if (@dr["wishList"].ToString() == "false")
-                                            {
-                                                @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
-                                            }
-                                            else
-                                            {
-                                                @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-heart" })
-
-                                            }
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
