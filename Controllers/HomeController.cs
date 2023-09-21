@@ -341,6 +341,50 @@ namespace HiTech.Controllers
             ViewBag.owner = ds.Tables[0];
             return View();
         }
+
+
+        [HttpGet]
+        public IActionResult AddToCart(Home user)
+
+        {
+            if (TempData.Peek("id") != null)
+            {
+                int id = int.Parse((string)TempData.Peek("id"));
+                DataSet ds = user.allproduct_cart(id);
+                ViewBag.cartdata = ds.Tables[0];
+                return View();
+            }
+            return RedirectToAction("Login");
+
+        }
+        [HttpGet]
+        public IActionResult AddToWishList(Home user)
+
+        {
+            int id = int.Parse((string)TempData.Peek("id"));
+            DataSet ds = user.allproduct_WishList(id);
+            ViewBag.WishlistData = ds.Tables[0];
+            return View();
+
+        }
+        [HttpGet]
+        public IActionResult RemoveToWishList(Home user, int id)
+
+        {
+            int user_id = Convert.ToInt32(TempData.Peek("id"));
+            user.removeWishlist(user_id, id);
+            return RedirectToAction("AddToWishList");
+
+        }
+        [HttpGet]
+        public IActionResult RemoveToCart(Home user, int id)
+
+        {
+            int user_id = Convert.ToInt32(TempData.Peek("id"));
+            user.removeCart(user_id, id);
+            return RedirectToAction("AddToCart");
+
+        }
         [HttpGet]
         public IActionResult Addtocart_Product(Home ad, int id)
         {
@@ -350,14 +394,51 @@ namespace HiTech.Controllers
                 ViewBag.addtocart = ds.Tables[0];
                 foreach (System.Data.DataRow row in ViewBag.addtocart.Rows)
                 {
-                    if (row["cart"].ToString() == "false")
+                    int user_id = Convert.ToInt32(TempData.Peek("id"));
+                    ad.addtocart(user_id, id);
+                }
+                return RedirectToAction("AddToCart");
+            }
+            return RedirectToAction("Login");
+
+        }
+        public IActionResult RemoveQty(Home ad, int id)
+        {
+            int user_id = Convert.ToInt32(TempData.Peek("id"));
+            if (TempData.Peek("id") != null)
+            {
+                DataSet ds = ad.selectCartedProduct(user_id, id);
+                ViewBag.addtocart = ds.Tables[0];
+                foreach (System.Data.DataRow row in ViewBag.addtocart.Rows)
+                {
+                    int qty = Convert.ToInt32(row["qty"]);
+                    int final = qty - 1;
+                    if (final == 0)
                     {
-                        ad.addtocart("True", id);
+                        ad.removeCart(user_id, id);
                     }
                     else
                     {
-                        ad.addtocart("false", id);
+                        ad.updateQty(user_id, id, final);
                     }
+                }
+                return RedirectToAction("AddToCart");
+            }
+            return RedirectToAction("Login");
+
+        }
+        public IActionResult AddQty(Home ad, int id)
+        {
+            int user_id = Convert.ToInt32(TempData.Peek("id"));
+            if (TempData.Peek("id") != null)
+            {
+                DataSet ds = ad.selectCartedProduct(user_id, id);
+                ViewBag.addtocart = ds.Tables[0];
+                foreach (System.Data.DataRow row in ViewBag.addtocart.Rows)
+                {
+                    int qty = Convert.ToInt32(row["qty"]);
+                    int final = qty + 1;
+                    ad.updateQty(user_id, id, final);
                 }
                 return RedirectToAction("AddToCart");
             }
@@ -373,38 +454,12 @@ namespace HiTech.Controllers
                 ViewBag.addtocart = ds.Tables[0];
                 foreach (System.Data.DataRow row in ViewBag.addtocart.Rows)
                 {
-                    if (row["wishlist"].ToString() == "false")
-                    {
-                        ad.addtoWishList("True", id);
-                    }
-                    else
-                    {
-                        ad.addtoWishList("false", id);
-                    }
+                    int user_id = Convert.ToInt32(TempData.Peek("id"));
+                    ad.addtoWishList(user_id, id);
                 }
                 return RedirectToAction("AddToWishList");
             }
             return RedirectToAction("Login");
-
-        }
-        [HttpGet]
-        public IActionResult AddToCart(Home user)
-
-        {
-            int id = int.Parse((string)TempData.Peek("id"));
-            DataSet ds = user.allproduct_cart(id);
-            ViewBag.cartdata = ds.Tables[0];
-            return View();
-
-        }
-        [HttpGet]
-        public IActionResult AddToWishList(Home user)
-
-        {
-            int id = int.Parse((string)TempData.Peek("id"));
-            DataSet ds = user.allproduct_WishList(id);
-            ViewBag.WishlistData = ds.Tables[0];
-            return View();
 
         }
         [HttpGet]
