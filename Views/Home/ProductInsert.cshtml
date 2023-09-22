@@ -5,8 +5,8 @@
 
 <div class="site-section">
     <div class="container">
-
-        <form method="post">
+         
+        <form method="post" enctype="multipart/form-data">
             <div class="row my-2">
                 <div class="col-md-6 form-group">
                     <label for="product_name">Product Name*</label>
@@ -25,6 +25,12 @@
                 <div class="col-md-6 form-group">
                     <label for="condition">Condition*</label>
                     <input type="text" name="condition" id="condition" class="form-control form-control-lg" required>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-md-6 form-group">
+                    <label for="color">Prodcut Image*</label>
+                    <input type="file" name="formfile" class="form-control form-control-lg" required>
                 </div>
             </div>
             <div class="row my-2">

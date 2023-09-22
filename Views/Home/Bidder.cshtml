@@ -28,22 +28,44 @@
 
                             <ul class="list-unstyled bidders">
                                 @{
+                                    int counter = 0;
                                     foreach (System.Data.DataRow bidder in ViewBag.bidder.Rows)
                                     {
-                                        <li class="d-flex justify-content-between align-items-center">
-                                            <div class="d-flex align-items-center">
-                                                <span class="mx-2">1.</span>
+                                        counter++;
+                                        @if (@bidder["winner"].ToString() == "True")
+                                        {
+                                            <li class="d-flex justify-content-between align-items-center bg-success text-white opacity-2">
                                                 <div class="d-flex align-items-center">
-                                                    <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
-                                                    <span>@bidder["bidder_name"].ToString()</span>
+                                                    <span class="mx-2">@counter </span>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                                        <span>@bidder["bidder_name"].ToString()</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <span class="price">
-                                                $
-                                                @bidder["bid_value"].ToString()
+                                                <span class="price text-white">
+                                                    $
+                                                    @bidder["bid_value"].ToString()
 
-                                            </span>
-                                        </li>
+                                                </span>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="mx-2">@counter</span>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                                        <span>@bidder["bidder_name"].ToString()</span>
+                                                    </div>
+                                                </div>
+                                                <span class="price">
+                                                    $
+                                                    @bidder["bid_value"].ToString()
+
+                                                </span>
+                                            </li>
+                                        }
                                     }
                                 }
                             </ul>

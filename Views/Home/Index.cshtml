@@ -26,47 +26,55 @@
                 <div class="row auctions-entry my-3">
                     @foreach (System.Data.DataRow dr in ViewBag.data.Rows)
                     {
-                        @if (@dr["status"].ToString() == "True")
+                        if (dr["status"].ToString() == "True")
                         {
-                            
-                        <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
-                            <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
-                                <div class="border-bottom">
-                                    <strong class="price">$@dr["price"].ToString()</strong>
-                                    <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-0" />
-                                </div>
-                                <div class="">
-                                    <h3><a asp-controller="Home" asp-action="Bid">@dr["product_name"].ToString()</a></h3>
-                                    <div class="d-flex mb-2 justify-content-between text-color">
-                                        <span>@dr["description"].ToString()</span>
-                                        <span>@dr["condition"].ToString()</span>
+                            <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
+                                <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
+                                    <div class="border-bottom">
+                                        <strong class="price">$@dr["price"].ToString()</strong>
+                                        <div style="height:200px;width:229px">
+                                            <img src="@ViewBag.ProductImages[ViewBag.data.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0 h-100 w-100" />
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-between text-color">
-                                        <span class="ml-auto">Starting Bid : @dr["starting_bid"].ToString()$</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        @Html.ActionLink("Submit a Bid","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
-
+                                    <div class="">
+                                        <h3><a asp-controller="Home" asp-action="Bid">@dr["product_name"].ToString()</a></h3>
+                                        <div class="d-flex mb-2 justify-content-between text-color">
+                                            <span>@dr["description"].ToString()</span>
+                                            <span>@dr["condition"].ToString()</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between text-color">
+                                            <span class="ml-auto">Starting Bid : @dr["starting_bid"].ToString()$</span>
+                                        </div>
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <div class="me-2">
-                                            
-                                                @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
-                                            
-                                            </div>
-                                            <div>
-                                            @if (@dr["wishList"].ToString() == "false")
-                                            {
-                                                @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
+                                            @{
+                                                if (dr["auctionLive"].ToString() == "true")
+                                                {
+                                                    @Html.ActionLink("Submit a Bid","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink("View ","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
+
+                                                }
                                             }
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="me-2">
+                                                    @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
+
+                                                </div>
+                                                <div>
+                                                    @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
-
                             </div>
-                        </div>
-                        }
 
+                        }
                     }
                 </div>
             </div>
@@ -81,14 +89,17 @@
                 <div class="row auctions-entry my-3">
                     @foreach (System.Data.DataRow dr in ViewBag.Normal.Rows)
                     {
-                        @if (@dr["status"].ToString() == "True")
+                        if (dr["status"].ToString() == "True")
                         {
 
                             <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
                                 <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
                                     <div class="border-bottom">
                                         <strong class="price">$@dr["price"].ToString()</strong>
-                                        <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-0" />
+                                        <div style="height:200px;width:229px">
+
+                                        <img src="@ViewBag.Productimaage[ViewBag.Normal.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0 h-100 w-100" />
+                                        </div>
                                     </div>
                                     <div class="">
                                         <h3><a asp-controller="Home" asp-action="Bid">@dr["product_name"].ToString()</a></h3>
@@ -102,24 +113,22 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             @Html.ActionLink("Buy","Bid", new {Id = dr["id"].ToString()},new {@class = "btn btn-bid"})
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <div class="me-2">
-                                                    @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
-                                                </div>
-                                                @*    <div>
-                                        @if (@dr["wishList"].ToString() == "false")
-                                        {
-                                        @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
-                                        }
-                                        else
-                                        {
-                                        @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-heart" })
+                                             
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="me-2">
+                                                        @Html.ActionLink("","Addtocart_Product", new {Id = dr["id"].ToString()},new {@class="fa-solid fs-5 fa-cart-shopping" })
 
-                                        }
-                                        </div> *@
+                                                    </div>
+                                                    <div>
+                                                        @Html.ActionLink("","WishList", new {Id = dr["id"].ToString()},new {@class="fa-regular fs-5 fa-heart" })
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         }
 

@@ -14,7 +14,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using ConfigurationManager = System.Configuration.ConfigurationManager;
+using Microsoft.Net.Http.Headers;
 
 namespace HiTech.Controllers
 {
@@ -34,6 +34,18 @@ namespace HiTech.Controllers
             ViewBag.data = ds.Tables[0];
             DataSet dataset = user.NormalProduct();
             ViewBag.Normal = dataset.Tables[0];
+            List<String> imggUrls = new List<String>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                imggUrls.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+            }
+            ViewBag.ProductImages = imggUrls;
+            List<String> img = new List<String>();
+            foreach (DataRow dr in dataset.Tables[0].Rows)
+            {
+                img.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+            }
+            ViewBag.Productimaage = img;
             return View();
         }
         [HttpGet]
@@ -103,9 +115,13 @@ namespace HiTech.Controllers
             {
                 string message = "Email is alredy taken";
                 ViewBag.errorMessage = message;
-                return RedirectToAction("ErrorMessageProduct");
+                return RedirectToAction("ErrorMessageRegister");
             }
             return RedirectToAction("Login");
+        }
+        public IActionResult ErrorMessageRegister()
+        {
+            return View();
         }
         [HttpGet]
         public IActionResult Bid(Home user, int id, int a = 0)
@@ -125,7 +141,7 @@ namespace HiTech.Controllers
                     {
                         counter++;
                     }
-                    if (counter == 10)
+                    if (counter == 2)
                     {
                         DataSet win = user.winner(id);
                         ViewBag.winnr = win.Tables[0];
@@ -133,10 +149,7 @@ namespace HiTech.Controllers
                         {
                             int winerId = Convert.ToInt32(row1["bid_id"]);
                             int add = user.updateWinner(winerId);
-                            if(add != 0)
-                            {
-                                user.updateAuction(id);
-                            }
+                            user.updateAuction(id);
                         }
                     }
                     user_id = Convert.ToInt32(row["user_id"]);
@@ -183,10 +196,24 @@ namespace HiTech.Controllers
         {
             return View();
         }
+        public IActionResult PaymentSuccess()
+        {
+            return View();
+        }
+        public IActionResult PaymentFailure()
+        {
+            return View();
+        }
         public IActionResult AboutUs(Home user)
         {
             DataSet ds = user.allTeam();
             ViewBag.data = ds.Tables[0];
+            List<String> imggUrls = new List<String>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                imggUrls.Add(Url.Content("~/Products/") + dr["image"].ToString());
+            }
+            ViewBag.Teamimg = imggUrls;
             return View();
         }
         public IActionResult Services()
@@ -197,6 +224,12 @@ namespace HiTech.Controllers
         {
             DataSet ds = user.allblog();
             ViewBag.data = ds.Tables[0];
+            List<String> imggUrls = new List<String>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                imggUrls.Add(Url.Content("~/Products/") + dr["img"].ToString());
+            }
+            ViewBag.Blogimg = imggUrls;
             return View();
         }
         public IActionResult Buy(Home user)
@@ -205,6 +238,18 @@ namespace HiTech.Controllers
             ViewBag.data = ds.Tables[0];
             DataSet dataset = user.NormalProduct();
             ViewBag.Normal = dataset.Tables[0];
+            List<String> imggUrls = new List<String>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                imggUrls.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+            }
+            ViewBag.ProductImages = imggUrls;
+            List<String> img = new List<String>();
+            foreach (DataRow dr in dataset.Tables[0].Rows)
+            {
+                img.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+            }
+            ViewBag.Productimaage = img;
             return View();
         }
         [HttpGet]
@@ -240,6 +285,12 @@ namespace HiTech.Controllers
                 int id = int.Parse((string)TempData.Peek("id"));
                 DataSet ds = user.allproduct_status(id);
                 ViewBag.Product = ds.Tables[0];
+                List<String> imggUrls = new List<String>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    imggUrls.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+                }
+                ViewBag.ProductImages = imggUrls;
                 return View();
             }
             else
@@ -248,28 +299,100 @@ namespace HiTech.Controllers
             }
 
         }
-        [HttpGet]
+        public ActionResult InitiatePayment(Home user, int id)
+        {
+            var key = "rzp_test_2TG19aA3c66eEv";
+            var secret = "pUXmQ6Bmbfkjoz1yRmS607zC";
+            DataSet ds = user.selectsubscription(id);
+            ViewBag.suscription = ds.Tables[0];
+            int amount = 0;
+            foreach (System.Data.DataRow dr in ViewBag.suscription.Rows)
+            {
+                amount = Convert.ToInt32(dr["price"]);
+            }
+            RazorpayClient client = new RazorpayClient(key, secret);
+            Dictionary<string, object> options = new Dictionary<string, object>();
+            options.Add("amount", Convert.ToDecimal(amount) * 100);
+            options.Add("currency", "USD");
+            Order order = client.Order.Create(options);
+            ViewBag.orderId = order["id"].ToString();
+            return View("Payment");
+        }
+        public ActionResult InitiatePaymentProduct(Home user, int id)
+        {
+            var key = "rzp_test_2TG19aA3c66eEv";
+            var secret = "pUXmQ6Bmbfkjoz1yRmS607zC";
+            DataSet ds = user.select_product(id);
+            ViewBag.suscription = ds.Tables[0];
+            int amount = 0;
+            foreach (System.Data.DataRow dr in ViewBag.suscription.Rows)
+            {
+                amount = Convert.ToInt32(dr["price"]);
+            }
+            RazorpayClient client = new RazorpayClient(key, secret);
+            Dictionary<string, object> options = new Dictionary<string, object>();
+            options.Add("amount", Convert.ToDecimal(amount) * 100);
+            options.Add("currency", "USD");
+            Order order = client.Order.Create(options);
+            ViewBag.orderId = order["id"].ToString();
+            return View("Payment");
+        }
+        public ActionResult InitiatePaymentProductCart(Home user, string payment)
+        {
+            var key = "rzp_test_2TG19aA3c66eEv";
+            var secret = "pUXmQ6Bmbfkjoz1yRmS607zC";
+            RazorpayClient client = new RazorpayClient(key, secret);
+            Dictionary<string, object> options = new Dictionary<string, object>();
+            options.Add("amount", Convert.ToDecimal(payment) * 100);
+            options.Add("currency", "USD");
+            Order order = client.Order.Create(options);
+            ViewBag.orderId = order["id"].ToString();
+            ViewBag.Price = Convert.ToDecimal(payment);
+            return View("Payment");
+        }
+        public ActionResult Payment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, Home add)
+        {
+            Dictionary<string, string> attributes = new Dictionary<string, string>();
 
+            attributes.Add("razorpay_payment_id", razorpay_payment_id);
+            attributes.Add("razorpay_order_id", razorpay_order_id);
+            attributes.Add("razorpay_signature", razorpay_signature); ;
+            string paymentId = razorpay_payment_id;
+            string orederId = razorpay_order_id;
+            add.Payment(paymentId, orederId);
+            try
+            {
+                Utils.verifyPaymentSignature(attributes);
+                return View("PaymentSuccess");
+            }
+            catch (Exception ex)
+            {
+                return View("PaymentFailure");
+            }
+        }
+
+        [HttpGet]
         public IActionResult ProductInsert()
         {
             if (TempData.Peek("id") != null)
             {
+
                 return View();
             }
             return RedirectToAction("Login");
         }
         [HttpPost]
-        public IActionResult ProductInsert(Home add)
+        public async Task<IActionResult> ProductInsert(Home add, IFormFile formFile)
         {
-            //var image = ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim();
-            //var path = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot","NewProduct",formFile.FileName);
-            //using (System.IO.Stream stream = new FileStream(path, FileMode.Create))
-            //{
-            //    await formFile.CopyToAsync(stream);
-            //}
-            //string seriallizableString = image.ToString();
-            //TempData["p_image"]= seriallizableString;
-            //add.product_image = image.ToString();
+            var image = ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim();
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Products", formFile.FileName);
+            using (System.IO.Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await formFile.CopyToAsync(stream);
+            }
+            string seriallizableString = image.ToString();
+            TempData["p_image"] = seriallizableString;
+            add.ProductImage = image.ToString();
             int id = int.Parse((string)TempData.Peek("id"));
             DataSet ds = add.SlectNumProduct(id);
             ViewBag.remainingProduct = ds.Tables[0];
@@ -278,7 +401,7 @@ namespace HiTech.Controllers
                 if (Convert.ToInt32(row["num_product"]) < Convert.ToInt32(row["total_product"]))
                 {
                     int product = Convert.ToInt32(row["num_product"]);
-                    int number = add.productInsert(add.product_name, id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.PType);
+                    int number = add.productInsert(add.product_name, id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.PType, add.ProductImage);
                     if (number != 0)
                     {
                         int remain = product + 1;
@@ -352,19 +475,41 @@ namespace HiTech.Controllers
                 int id = int.Parse((string)TempData.Peek("id"));
                 DataSet ds = user.allproduct_cart(id);
                 ViewBag.cartdata = ds.Tables[0];
+                List<String> imggUrls = new List<String>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    imggUrls.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+                }
+                ViewBag.ProductImages = imggUrls;
                 return View();
             }
-            return RedirectToAction("Login");
+            else
+            {
+                return RedirectToAction("Login");
+            }
 
         }
         [HttpGet]
         public IActionResult AddToWishList(Home user)
 
         {
-            int id = int.Parse((string)TempData.Peek("id"));
-            DataSet ds = user.allproduct_WishList(id);
-            ViewBag.WishlistData = ds.Tables[0];
-            return View();
+            if (TempData.Peek("id") != null)
+            {
+                int id = int.Parse((string)TempData.Peek("id"));
+                DataSet ds = user.allproduct_WishList(id);
+                ViewBag.WishlistData = ds.Tables[0];
+                List<String> imggUrls = new List<String>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    imggUrls.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+                }
+                ViewBag.ProductImages = imggUrls;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
 
         }
         [HttpGet]
@@ -477,18 +622,6 @@ namespace HiTech.Controllers
         {
             DataSet ds = user.all_plan(id);
             ViewBag.subdata = ds.Tables[0];
-            foreach (System.Data.DataRow row in ViewBag.subdata.Rows)
-            {
-                int amount = Convert.ToInt32(row["price"]);
-                var key = ConfigurationManager.AppSettings["RazorPaykey"];
-                var secret = ConfigurationManager.AppSettings["RazorPaySecret"];
-                RazorpayClient client = new RazorpayClient(key, secret);
-                Dictionary<string, object> options = new Dictionary<string, object>();
-                options.Add("amount", Convert.ToDecimal(amount) * 100);
-                options.Add("currency", "USD");
-                Order order = client.Order.Create(options);
-                ViewBag.orderId = order["id"].ToString();
-            }
             return RedirectToAction("Payment");
 
         }
@@ -496,24 +629,6 @@ namespace HiTech.Controllers
         public ActionResult Payment()
         {
             return View();
-        }
-        [HttpPost]
-        public ActionResult Payment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, int id)
-        {
-            Dictionary<string, string> attributes = new Dictionary<string, string>();
-
-            attributes.Add("razorpay_payment_id", razorpay_payment_id);
-            attributes.Add("razorpay_order_id", razorpay_order_id);
-            attributes.Add("razorpay_signature", razorpay_signature);
-            try
-            {
-                Utils.verifyPaymentSignature(attributes);
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("SubPlan");
-            }
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

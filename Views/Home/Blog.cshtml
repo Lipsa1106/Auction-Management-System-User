@@ -21,7 +21,10 @@
                 <div class="col-lg-4 mb-5">
                     <div class="news-entry-item">
                         <a href="#" class="thumbnail">
-                            <img src="~/img/blog/1.webp" alt="Image" class="img-fluid">
+                            <div style="height:300px;width:300px">
+                                <img src="@ViewBag.Blogimg[ViewBag.data.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0 h-100 w-100" />
+
+                            </div>
                             <div class="date">
                                 @dr["b_date"].ToString()
                             </div>

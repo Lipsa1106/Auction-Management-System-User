@@ -21,7 +21,8 @@
                 <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
                     <div class="border-bottom">
                         <strong class="price">$@dr["price"].ToString()</strong>
-                        <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-0" />
+                        <img src="@ViewBag.ProductImages[ViewBag.WishlistData.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0" />
+
                     </div>
                     <div class="">
                         <h3><a asp-controller="Home" asp-action="Bid">@dr["product_name"].ToString()</a></h3>
