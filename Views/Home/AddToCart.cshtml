@@ -20,7 +20,7 @@
                 <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
                     <div class="border-bottom">
                         <strong class="price">$@dr["price"].ToString()</strong>
-                        <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-0" />
+                        <img src="@ViewBag.ProductImages[ViewBag.cartdata.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0" />
                     </div>
                     <div class="">
                         <h3><a asp-controller="Home" asp-action="Bid">@dr["product_name"].ToString()</a></h3>
@@ -50,6 +50,7 @@
             int coutnet = 0;
             var gst = 0;
             var final = 0;
+            ViewBag.Final = final;
             <table class="table mt-5">
                 <thead>
                     <tr>
@@ -78,7 +79,8 @@
                     }
                     <tr>
                         <td colspan="4" class="fw-bold">Total Amount : <span class="fs-4">@final</span>  </td>
-                        <td class="text-end"><button class="btn btn-primary-main">Make Payment</button></td>
+                        <td class="text-end">
+                            @Html.ActionLink("Make Payment","InitiatePaymentProductCart", new {payment = final.ToString()},new {@class="btn btn-sm btn-primary-main px-6 py-2" })
                     </tr>
                 </tbody>
             </table>

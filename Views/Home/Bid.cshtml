@@ -22,22 +22,24 @@
                                         Number of Bids: <strong class="text-black">@dr["starting_bid"].ToString()</strong><br>
                                         Condition: <strong class="text-black">@dr["condition"].ToString()</strong>
                                     </p>
-                                    <form method="post">
-                                        <div class="mb-4">
-                                            <input type="text" class="form-control mb-2" name="bidder_name" fdprocessedid="m5egnh" placeholder="Bidder Name">
-                                            <input type="text" class="form-control mb-2" placeholder="Bid $0.00" name="bid_value" fdprocessedid="m5egnh">
-                                            <input type="date" class="form-control mb-2" name="bid_time" fdprocessedid="m5egnh">
-                                            <input type="submit" class="btn btn-block btn-bid" fdprocessedid="8rceq" value="Submit a Bid">
-                                            @{
-                                                if (dr["pType"].ToString() == "normal")
-                                                {
-                                                    <span class="d-block text-center my-2">or</span>
-                                                    <button class="btn btn-primary-main btn-block" fdprocessedid="yy8q09">Buy Now</button>
+                                    @{
+                                        if (dr["pType"].ToString() == "normal")
+                                        {
+                                            @Html.ActionLink("Buy Now","InitiatePaymentProduct", new {Id = dr["id"].ToString()},new {@class="btn btn-sm btn-primary-main px-6 py-2" })
+                                        }
+                                        else
+                                        {
+                                            <form method="post">
+                                                <div class="mb-4">
+                                                    <input type="text" class="form-control mb-2" name="bidder_name" fdprocessedid="m5egnh" placeholder="Bidder Name">
+                                                    <input type="text" class="form-control mb-2" placeholder="Bid $0.00" name="bid_value" fdprocessedid="m5egnh">
+                                                    <input type="date" class="form-control mb-2" name="bid_time" fdprocessedid="m5egnh">
+                                                    <input type="submit" class="btn btn-block btn-bid" fdprocessedid="8rceq" value="Submit a Bid">
 
-                                                }
-                                            }
-                                        </div>
-                                    </form>
+                                                </div>
+                                            </form>
+                                        }
+                                    }
                                 </div>
                                 @{
                                     foreach (System.Data.DataRow row in ViewBag.owner.Rows)
@@ -73,21 +75,21 @@
                                         foreach (System.Data.DataRow bidder in ViewBag.BidData.Rows)
                                         {
                                             count++;
-                                                <li class="d-flex justify-content-between align-items-center opacity-2">
+                                            <li class="d-flex justify-content-between align-items-center opacity-2">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="mx-2">@count </span>
                                                     <div class="d-flex align-items-center">
-                                                        <span class="mx-2">@count </span>
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
-                                                            <span>@bidder["bidder_name"].ToString()</span>
-                                                        </div>
+                                                        <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                                        <span>@bidder["bidder_name"].ToString()</span>
                                                     </div>
-                                                    <span class="price">
-                                                        $
-                                                        @bidder["bid_value"].ToString()
+                                                </div>
+                                                <span class="price">
+                                                    $
+                                                    @bidder["bid_value"].ToString()
 
-                                                    </span>
-                                                </li>
-                                           
+                                                </span>
+                                            </li>
+
 
                                         }
                                     }
@@ -144,7 +146,7 @@
                                             }
                                         }
                                     </ul>
-                                    
+
                                 </div>
                                 @{
                                     foreach (System.Data.DataRow row in ViewBag.owner.Rows)
@@ -174,7 +176,7 @@
                                     </div>
                                 </div>
                                 <p>@dr["description"].ToString()</p>
-                                
+
                             </div>
                         }
                     }
