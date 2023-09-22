@@ -7,19 +7,17 @@ namespace demo.Models
 {
     public class Home
     {
-        SqlConnection con = new SqlConnection("Data Source=.\\SQLExpress;Database=hi-tech;User Id=sa;pwd=336633");
+        SqlConnection con = new SqlConnection("Data Source=.\\SQLExpress;Database=hi-tech;User Id=sa;pwd=palak@123");
         public string name { get; set; }
         public string email { get; set; }
         public string password { get; set; }
         public string product_name { get; set; }
-        public int user_id { get; set; }
         public string brand { get; set; }
         public string color { get; set; }
         public string price { get; set; }
         public string condition { get; set; }
         public string description { get; set; }
         public string starting_bid { get; set; }
-        public string product_image { get; set; }
         public string start_time { get; set; }
         public string ProductImage { get; set; }
         public string end_time { get; set; }
@@ -30,9 +28,6 @@ namespace demo.Models
         public string bid_value { get; set; }
         public string bid_time { get; set; }
         public string bidder_name { get; set; }
-        public int num_product { get; set; }
-        public string report { get; set; }
-        public string cart { get; set; }
         public string PType { get; set; }
 
         public int register(string name, string email, string password)
@@ -47,22 +42,6 @@ namespace demo.Models
             SqlCommand cmd = new SqlCommand("insert into [dbo].[UploadProduct] (user_id,total_product,num_product,num_bid,total_bid)values('" + user_id + "','" + total_product + "','" + num_product + "','" + num_bid + "','" + total_bid + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
-        }
-        public DataSet SelectLastData()
-        {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[Register]", con);
-            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
-            DataSet ds = new DataSet();
-            dn.Fill(ds);
-            return ds;
-        }
-        public DataSet register()
-        {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[Register] ", con);
-            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
-            DataSet ds = new DataSet();
-            dn.Fill(ds);
-            return ds;
         }
         public DataSet login(string email, string password, string status)
         {
@@ -224,13 +203,34 @@ namespace demo.Models
             dn.Fill(ds);
             return ds;
         }
-        public DataSet selectBidder1(int id)
+        public DataSet winner(int id)
         {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "'", con);
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where product_id='" + id + "' ORDER BY bid_value DESC OFFSET 0 ROWS FETCH FIRST 1 ROWS ONLY   ", con);
             SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
             DataSet ds = new DataSet();
             dn.Fill(ds);
             return ds;
+        }
+        public DataSet winnerBid(int id)
+        {
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where product_id='" + id + "' ORDER BY bid_value ASC", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
+        }
+        public int updateWinner(int id)
+        {
+            SqlCommand cmd = new SqlCommand("update [dbo].[SubmitBid1] set winner='" + "True" + "' where bid_id='" + id + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
+        }
+        public int updateAuction(int id)
+        {
+            con.Close();
+            SqlCommand cmd = new SqlCommand("update [dbo].[Table_1] set auctionLive='" + "false" + "' where id='" + id + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
         }
         public DataSet SelectLastRecord()
         {
