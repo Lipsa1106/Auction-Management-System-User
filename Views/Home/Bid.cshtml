@@ -10,84 +10,173 @@
                 @{
 
                     foreach (System.Data.DataRow dr in ViewBag.data.Rows)
+
                     {
-                        <div class="col-lg-3 order-lg-2">
-                            <div class="side-box ">
+                        @if (dr["auctionLive"].ToString() == "true")
+                        {
+                            <div class="col-lg-3 order-lg-2">
+                                <div class="side-box ">
 
-                                <p>
-                                    Price: <strong class="text-black">$@dr["price"].ToString()</strong> <br>
-                                    Number of Bids: <strong class="text-black">@dr["starting_bid"].ToString()</strong><br>
-                                    Condition: <strong class="text-black">@dr["condition"].ToString()</strong>
-                                </p>
-                                <form method="post">
-                                    <div class="mb-4">
-                                        <input type="text" class="form-control mb-2" name="bidder_name" fdprocessedid="m5egnh" placeholder="Bidder Name">
-                                        <input type="text" class="form-control mb-2" placeholder="Bid $0.00" name="bid_value" fdprocessedid="m5egnh">
-                                        <input type="date" class="form-control mb-2" name="bid_time" fdprocessedid="m5egnh">
-                                        <input type="submit" class="btn btn-block btn-bid" fdprocessedid="8rceq" value="Submit a Bid">
-                                        @{
-                                            if (dr["pType"].ToString() == "normal")
-                                            {
-                                                <span class="d-block text-center my-2">or</span>
-                                                <button class="btn btn-primary-main btn-block" fdprocessedid="yy8q09">Buy Now</button>
+                                    <p>
+                                        Price: <strong class="text-black">$@dr["price"].ToString()</strong> <br>
+                                        Number of Bids: <strong class="text-black">@dr["starting_bid"].ToString()</strong><br>
+                                        Condition: <strong class="text-black">@dr["condition"].ToString()</strong>
+                                    </p>
+                                    <form method="post">
+                                        <div class="mb-4">
+                                            <input type="text" class="form-control mb-2" name="bidder_name" fdprocessedid="m5egnh" placeholder="Bidder Name">
+                                            <input type="text" class="form-control mb-2" placeholder="Bid $0.00" name="bid_value" fdprocessedid="m5egnh">
+                                            <input type="date" class="form-control mb-2" name="bid_time" fdprocessedid="m5egnh">
+                                            <input type="submit" class="btn btn-block btn-bid" fdprocessedid="8rceq" value="Submit a Bid">
+                                            @{
+                                                if (dr["pType"].ToString() == "normal")
+                                                {
+                                                    <span class="d-block text-center my-2">or</span>
+                                                    <button class="btn btn-primary-main btn-block" fdprocessedid="yy8q09">Buy Now</button>
 
+                                                }
                                             }
-                                        }
-                                    </div>
-                                </form>
-                            </div>
-                            @{
-                                foreach (System.Data.DataRow row in ViewBag.owner.Rows)
-                                {
-
-                                    <div class="side-box text-center">
-                                        <img src="~/img/homepage/asset 13.jpeg" alt="Image" class="img-fluid w-50 rounded-circle mb-4">
-                                        <h3 class="h5 text-black">@row["name"].ToString()</h3>
-                                        <span class="mb-3 d-block text-muted">@row["email"].ToString()</span>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repudiandae recusandae, incidunt possimus provident vel facilis!</p>
-                                    </div>
-                                }
-                            }
-
-                        </div>
-                        <div class="col-lg-8 px-lg-5">
-                            <div class="owl-carousel  slide-one-item mb-5 owl-loaded owl-drag">
-                                <div class="owl-stage-outer">
-                                    <div class="owl-stage" style="">
-                                        <div class="owl-item" style="width: 693.8px;">
-                                            <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-54">
                                         </div>
-                                        <div class="owl-item" style="width: 693.8px;">
-                                            <img src="~/img/homepage/asset 2.jpeg" alt="Image" class="img-fluid mb-54">
+                                    </form>
+                                </div>
+                                @{
+                                    foreach (System.Data.DataRow row in ViewBag.owner.Rows)
+                                    {
+
+                                        <div class="side-box text-center">
+                                            <img src="~/img/homepage/asset 13.jpeg" alt="Image" class="img-fluid w-50 rounded-circle mb-4">
+                                            <h3 class="h5 text-black">@row["name"].ToString()</h3>
+                                            <span class="mb-3 d-block text-muted">@row["email"].ToString()</span>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repudiandae recusandae, incidunt possimus provident vel facilis!</p>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                            <div class="col-lg-8 px-lg-5">
+                                <div class="owl-carousel  slide-one-item mb-5 owl-loaded owl-drag">
+                                    <div class="owl-stage-outer">
+                                        <div class="owl-stage" style="">
+                                            <div class="owl-item" style="width: 693.8px;">
+                                                <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-54">
+                                            </div>
+                                            <div class="owl-item" style="width: 693.8px;">
+                                                <img src="~/img/homepage/asset 2.jpeg" alt="Image" class="img-fluid mb-54">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <p>@dr["description"].ToString()</p>
+                                <ul class="list-unstyled bidders">
+                                    @{
+                                        var count = 0;
+                                        foreach (System.Data.DataRow bidder in ViewBag.BidData.Rows)
+                                        {
+                                            count++;
+                                                <li class="d-flex justify-content-between align-items-center opacity-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="mx-2">@count </span>
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                                            <span>@bidder["bidder_name"].ToString()</span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="price">
+                                                        $
+                                                        @bidder["bid_value"].ToString()
+
+                                                    </span>
+                                                </li>
+                                           
+
+                                        }
+                                    }
+                                </ul>
                             </div>
-                            <p>@dr["description"].ToString()</p>
 
-                            <h2 class="my-4">Bidders</h2>
-                            <ul class="list-unstyled bidders">
+                        }
+                        else
+                        {
+                            <div class="col-lg-3 order-lg-2">
+                                <div class="side-box ">
+                                    <h2 class="my-4">Bidders</h2>
+                                    <ul class="list-unstyled bidders">
+                                        @{
+                                            var count = 0;
+                                            foreach (System.Data.DataRow bidder in ViewBag.BidData.Rows)
+                                            {
+                                                count++;
+                                                @if (@bidder["winner"].ToString() == "True")
+                                                {
+                                                    <li class="d-flex justify-content-between align-items-center bg-success text-white opacity-2">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="mx-2">@count </span>
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                                                <span>@bidder["bidder_name"].ToString()</span>
+                                                            </div>
+                                                        </div>
+                                                        <span class="price text-white">
+                                                            $
+                                                            @bidder["bid_value"].ToString()
+
+                                                        </span>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="mx-2">@count</span>
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
+                                                                <span>@bidder["bidder_name"].ToString()</span>
+                                                            </div>
+                                                        </div>
+                                                        <span class="price">
+                                                            $
+                                                            @bidder["bid_value"].ToString()
+
+                                                        </span>
+                                                    </li>
+                                                }
+
+                                            }
+                                        }
+                                    </ul>
+                                    
+                                </div>
                                 @{
-                                    foreach (System.Data.DataRow bidder in ViewBag.BidData.Rows)
+                                    foreach (System.Data.DataRow row in ViewBag.owner.Rows)
                                     {
-                                        <li class="d-flex justify-content-between align-items-center">
-                                            <div class="d-flex align-items-center">
-                                                <span class="mx-2">1.</span>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="~/img/homepage/asset 10.jpeg" alt="Image" class="mx-2">
-                                                    <span>@bidder["bidder_name"].ToString()</span>
-                                                </div>
-                                            </div>
-                                            <span class="price">
-                                                $
-                                                @bidder["bid_value"].ToString()
 
-                                            </span>
-                                        </li>
+                                        <div class="side-box text-center">
+                                            <img src="~/img/homepage/asset 13.jpeg" alt="Image" class="img-fluid w-50 rounded-circle mb-4">
+                                            <h3 class="h5 text-black">@row["name"].ToString()</h3>
+                                            <span class="mb-3 d-block text-muted">@row["email"].ToString()</span>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repudiandae recusandae, incidunt possimus provident vel facilis!</p>
+                                        </div>
                                     }
                                 }
-                            </ul>
-                        </div>
+
+                            </div>
+                            <div class="col-lg-8 px-lg-5">
+                                <div class="owl-carousel  slide-one-item mb-5 owl-loaded owl-drag">
+                                    <div class="owl-stage-outer">
+                                        <div class="owl-stage" style="">
+                                            <div class="owl-item" style="width: 693.8px;">
+                                                <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-54">
+                                            </div>
+                                            <div class="owl-item" style="width: 693.8px;">
+                                                <img src="~/img/homepage/asset 2.jpeg" alt="Image" class="img-fluid mb-54">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>@dr["description"].ToString()</p>
+                                
+                            </div>
+                        }
                     }
                 }
             </div>

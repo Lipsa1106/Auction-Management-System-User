@@ -21,6 +21,7 @@ namespace demo.Models
         public string starting_bid { get; set; }
         public string product_image { get; set; }
         public string start_time { get; set; }
+        public string ProductImage { get; set; }
         public string end_time { get; set; }
         public string f_name { get; set; }
         public string l_name { get; set; }
@@ -33,9 +34,10 @@ namespace demo.Models
         public string report { get; set; }
         public string cart { get; set; }
         public string PType { get; set; }
+
         public int register(string name, string email, string password)
         {
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[Register] (name,email,password,status,report)values('" + name + "','" + email + "','" + password + "','" + true + "','" + false + "')", con);
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[Register] (name,email,password,status,report)values('" + name + "','" + email + "','" + password + "','" + "true" + "','" + "false" + "')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
@@ -71,6 +73,35 @@ namespace demo.Models
             dn.Fill(ds);
             return ds;
         }
+        public DataSet winner(int id)
+        {
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where product_id='" + id + "' ORDER BY bid_value DESC OFFSET 0 ROWS FETCH FIRST 1 ROWS ONLY   ", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
+        }
+        public int updateWinner(int id)
+        {
+            SqlCommand cmd = new SqlCommand("update [dbo].[SubmitBid1] set winner='" + "True" + "' where bid_id='" + id + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
+        }
+        public int updateAuction(int id)
+        {
+            con.Close();
+            SqlCommand cmd = new SqlCommand("update [dbo].[Table_1] set auctionLive='" + "false" + "' where id='" + id + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
+        }
+        public DataSet winnerBid(int id)
+        {
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where product_id='" + id + "' ORDER BY bid_value ASC", con);
+            SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
+            DataSet ds = new DataSet();
+            dn.Fill(ds);
+            return ds;
+        }
         public DataSet allproduct()
         {
             SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[Table_1] where pType='" + "auction" + "' ", con);
@@ -95,10 +126,10 @@ namespace demo.Models
             dn.Fill(ds);
             return ds;
         }
-        public int productInsert(string name, int id, string brand, string color, string conditin, string des, string bid, string price, string pType)
+        public int productInsert(string name, int id, string brand, string color, string conditin, string des, string bid, string price, string pType,string image)
         {
-            SqlCommand cmd = new SqlCommand("insert into [dbo].[Table_1] (product_name,user_id,brand,color,condition,description,starting_bid,price,status,report,auctionLive,pType)values('" + name + "','" + id + "','" + brand + "','" + color + "','" + conditin + "','" + des + "','" + bid + "','" + price + "','" + false + "','" + "False" + "','" +
-                "true" + "','" + pType + "')", con);
+            SqlCommand cmd = new SqlCommand("insert into [dbo].[Table_1] (product_name,user_id,brand,color,condition,description,starting_bid,price,status,report,auctionLive,pType,p_image)values('" + name + "','" + id + "','" + brand + "','" + color + "','" + conditin + "','" + des + "','" + bid + "','" + price + "','" + false + "','" + "False" + "','" +
+                "true" + "','" + pType + "','"+image+"')", con);
             con.Open();
             return cmd.ExecuteNonQuery();
 
@@ -187,7 +218,7 @@ namespace demo.Models
         }
         public DataSet selectBidder(int id, int user_id)
         {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "' and user_id='" + user_id + "' ", con);
+            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where  product_id = '" + id + "' ", con);
             SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
             DataSet ds = new DataSet();
             dn.Fill(ds);

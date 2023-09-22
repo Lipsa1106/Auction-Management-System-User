@@ -14,8 +14,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using Microsoft.Net.Http.Headers;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
-
 namespace HiTech.Controllers
 {
     public class HomeController : Controller
@@ -118,8 +118,24 @@ namespace HiTech.Controllers
                 ViewBag.data = dataSet.Tables[0];
                 foreach (System.Data.DataRow row in ViewBag.data.Rows)
                 {
-                    DataSet bid = user.selectBidder1(id);
+                    DataSet bid = user.winnerBid(id);
                     ViewBag.BidData = bid.Tables[0];
+                    int counter = 0;
+                    foreach (System.Data.DataRow dr in ViewBag.BidData.Rows)
+                    {
+                        counter++;
+                    }
+                    if (counter == 2)
+                    {
+                        DataSet win = user.winner(id);
+                        ViewBag.winnr = win.Tables[0];
+                        foreach (System.Data.DataRow row1 in ViewBag.winnr.Rows)
+                        {
+                            int winerId = Convert.ToInt32(row1["bid_id"]);
+                            int add = user.updateWinner(winerId);
+                                user.updateAuction(id);
+                        }
+                    }
                     user_id = Convert.ToInt32(row["user_id"]);
                     DataSet ds = user.owner(user_id);
                     ViewBag.owner = ds.Tables[0];
@@ -230,7 +246,6 @@ namespace HiTech.Controllers
 
         }
         [HttpGet]
-
         public IActionResult ProductInsert()
         {
             if (TempData.Peek("id") != null)
@@ -240,17 +255,17 @@ namespace HiTech.Controllers
             return RedirectToAction("Login");
         }
         [HttpPost]
-        public IActionResult ProductInsert(Home add)
+        public async Task<IActionResult> ProductInsert(Home add,IFormFile formFile)
         {
-            //var image = ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim();
-            //var path = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot","NewProduct",formFile.FileName);
-            //using (System.IO.Stream stream = new FileStream(path, FileMode.Create))
-            //{
-            //    await formFile.CopyToAsync(stream);
-            //}
-            //string seriallizableString = image.ToString();
-            //TempData["p_image"]= seriallizableString;
-            //add.product_image = image.ToString();
+            var image = ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim();
+            var path = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot","Products",formFile.FileName);
+            using (System.IO.Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await formFile.CopyToAsync(stream);
+            }
+            string seriallizableString = image.ToString();
+            TempData["p_image"]= seriallizableString;
+            add.ProductImage = image.ToString();
             int id = int.Parse((string)TempData.Peek("id"));
             DataSet ds = add.SlectNumProduct(id);
             ViewBag.remainingProduct = ds.Tables[0];
@@ -259,7 +274,7 @@ namespace HiTech.Controllers
                 if (Convert.ToInt32(row["num_product"]) < Convert.ToInt32(row["total_product"]))
                 {
                     int product = Convert.ToInt32(row["num_product"]);
-                    int number = add.productInsert(add.product_name, id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.PType);
+                    int number = add.productInsert(add.product_name, id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.PType,add.ProductImage);
                     if (number != 0)
                     {
                         int remain = product + 1;
@@ -489,7 +504,7 @@ namespace HiTech.Controllers
             try
             {
                 Utils.verifyPaymentSignature(attributes);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index"); 
             }
             catch (Exception ex)
             {
