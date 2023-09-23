@@ -9,7 +9,7 @@
             <div class="row justify-content-center">
                 @{
 
-                    foreach (System.Data.DataRow dr in ViewBag.data.Rows)
+                    foreach (System.Data.DataRow dr in ViewBag.SelectedProduct.Rows)
 
                     {
                         @if (dr["auctionLive"].ToString() == "true")
@@ -60,10 +60,10 @@
                                     <div class="owl-stage-outer">
                                         <div class="owl-stage" style="">
                                             <div class="owl-item" style="width: 693.8px;">
-                                                <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-54">
+                                                <img src="@ViewBag.product_img[ViewBag.SelectedProduct.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0" />
                                             </div>
                                             <div class="owl-item" style="width: 693.8px;">
-                                                <img src="~/img/homepage/asset 2.jpeg" alt="Image" class="img-fluid mb-54">
+                                                <img src="@ViewBag.product_img[ViewBag.SelectedProduct.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0" />
                                             </div>
                                         </div>
                                     </div>
@@ -99,10 +99,10 @@
                         }
                         else
                         {
-                            <div class="col-lg-3 order-lg-2">
-                                <div class="side-box ">
-                                    <h2 class="my-4">Bidders</h2>
-                                    <ul class="list-unstyled bidders">
+                            <div class="col-lg-3 order-lg-2 ">
+                                <div class="side-box mb-2 p-0">
+                                    <h2 class="my-4 p-2">Bidders</h2>
+                                    <ul class="list-unstyled bidders ">
                                         @{
                                             var count = 0;
                                             foreach (System.Data.DataRow bidder in ViewBag.BidData.Rows)
@@ -110,7 +110,7 @@
                                                 count++;
                                                 @if (@bidder["winner"].ToString() == "True")
                                                 {
-                                                    <li class="d-flex justify-content-between align-items-center bg-success text-white opacity-2">
+                                                    <li class="d-flex p-2 justify-content-between align-items-center bg-success text-white opacity-2">
                                                         <div class="d-flex align-items-center">
                                                             <span class="mx-2">@count </span>
                                                             <div class="d-flex align-items-center">
@@ -127,7 +127,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <li class="d-flex justify-content-between align-items-center">
+                                                    <li class="d-flex p-2 justify-content-between align-items-center">
                                                         <div class="d-flex align-items-center">
                                                             <span class="mx-2">@count</span>
                                                             <div class="d-flex align-items-center">
@@ -167,10 +167,10 @@
                                     <div class="owl-stage-outer">
                                         <div class="owl-stage" style="">
                                             <div class="owl-item" style="width: 693.8px;">
-                                                <img src="~/img/homepage/asset_1.jpeg" alt="Image" class="img-fluid mb-54">
+                                                <img src="@ViewBag.product_img[ViewBag.SelectedProduct.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0" />
                                             </div>
                                             <div class="owl-item" style="width: 693.8px;">
-                                                <img src="~/img/homepage/asset 2.jpeg" alt="Image" class="img-fluid mb-54">
+                                                <img src="@ViewBag.product_img[ViewBag.SelectedProduct.Rows.IndexOf(dr)]" alt="Image" class="img-fluid mb-0" />
                                             </div>
                                         </div>
                                     </div>

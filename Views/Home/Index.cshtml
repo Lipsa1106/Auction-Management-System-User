@@ -26,7 +26,7 @@
                 <div class="row auctions-entry my-3">
                     @foreach (System.Data.DataRow dr in ViewBag.data.Rows)
                     {
-                        if (dr["status"].ToString() == "True")
+                        if (dr["status"].ToString() == "True" && dr["report"].ToString() == "False")
                         {
                             <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">
                                 <div class="item shadow-lg p-3" style="margin-bottom:0;box-shadow:none">
@@ -89,7 +89,7 @@
                 <div class="row auctions-entry my-3">
                     @foreach (System.Data.DataRow dr in ViewBag.Normal.Rows)
                     {
-                        if (dr["status"].ToString() == "True")
+                        if (dr["status"].ToString() == "True" && dr["report"].ToString() == "False")
                         {
 
                             <div class="col-12 col-md-6  col-lg-6 col-xl-3 col-xxl-3 mt-4 mt-md-2 mt-lg-3">

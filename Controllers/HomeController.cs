@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using Microsoft.Net.Http.Headers;
+using MessagePack;
 
 namespace HiTech.Controllers
 {
@@ -130,9 +131,15 @@ namespace HiTech.Controllers
             if (TempData.Peek("id") != null)
             {
 
-                DataSet dataSet = user.select_product(id);
-                ViewBag.data = dataSet.Tables[0];
-                foreach (System.Data.DataRow row in ViewBag.data.Rows)
+                DataSet dataset = user.select_product(id);
+                ViewBag.SelectedProduct = dataset.Tables[0];
+                List<String> imgurl = new List<String>();
+                foreach (DataRow dr in dataset.Tables[0].Rows)
+                {
+                    imgurl.Add(Url.Content("~/Products/") + dr["p_image"].ToString());
+                }
+                ViewBag.product_img = imgurl;
+                foreach (System.Data.DataRow row in ViewBag.SelectedProduct.Rows)
                 {
                     DataSet bid = user.winnerBid(id);
                     ViewBag.BidData = bid.Tables[0];
@@ -148,7 +155,12 @@ namespace HiTech.Controllers
                         foreach (System.Data.DataRow row1 in ViewBag.winnr.Rows)
                         {
                             int winerId = Convert.ToInt32(row1["bid_id"]);
+                            int userid = Convert.ToInt32(row1["user_id"]);
+                            int productid = Convert.ToInt32(row1["product_id"]);
+                            var bidalue = row1["bid_value"].ToString();
                             int add = user.updateWinner(winerId);
+                            user.updateProductPrice(bidalue,productid);
+                            user.addtocart(userid, productid);
                             user.updateAuction(id);
                         }
                     }
@@ -308,6 +320,8 @@ namespace HiTech.Controllers
             int amount = 0;
             foreach (System.Data.DataRow dr in ViewBag.suscription.Rows)
             {
+                TempData["num_product"] = Convert.ToInt32(dr["num_product"]);
+                TempData["num_bid"] = Convert.ToInt32(dr["num_bid"]);
                 amount = Convert.ToInt32(dr["price"]);
             }
             RazorpayClient client = new RazorpayClient(key, secret);
@@ -362,6 +376,10 @@ namespace HiTech.Controllers
             add.Payment(paymentId, orederId);
             try
             {
+                int id = Convert.ToInt32(TempData["id"]);
+                int product = Convert.ToInt32(TempData["num_product"]);
+                int bid = Convert.ToInt32(TempData["num_bid"]);
+                add.updateTotal(product,bid,id);
                 Utils.verifyPaymentSignature(attributes);
                 return View("PaymentSuccess");
             }
@@ -441,15 +459,13 @@ namespace HiTech.Controllers
         public IActionResult Update_product(Home db, int id)
         {
             DataSet dataSet = db.select_product(id);
-            ViewBag.data = dataSet.Tables[0];
+            ViewBag.updateData = dataSet.Tables[0];
             return View();
         }
         [HttpPost]
         public IActionResult Update_product(Home add, int id, int a = 0)
         {
-
-            int user_id = int.Parse((string)TempData.Peek("id"));
-            add.updateproduct(add.product_name, user_id, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price, add.start_time, add.end_time, id);
+            add.updateproduct(add.product_name, add.brand, add.color, add.condition, add.description, add.starting_bid, add.price,id);
             return RedirectToAction("Product");
         }
         [HttpGet]

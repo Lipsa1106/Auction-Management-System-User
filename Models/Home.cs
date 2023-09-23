@@ -60,7 +60,7 @@ namespace demo.Models
         }
         public DataSet winner(int id)
         {
-            SqlCommand sqlCommand = new SqlCommand("select * from [dbo].[SubmitBid1] where product_id='" + id + "' ORDER BY bid_value DESC OFFSET 0 ROWS FETCH FIRST 1 ROWS ONLY   ", con);
+            SqlCommand sqlCommand = new SqlCommand("select TOP 1 * from [dbo].[SubmitBid1] where product_id='" + id + "' ORDER BY bid_value DESC ", con);
             SqlDataAdapter dn = new SqlDataAdapter(sqlCommand);
             DataSet ds = new DataSet();
             dn.Fill(ds);
@@ -187,9 +187,16 @@ namespace demo.Models
             con.Open();
             return cmd.ExecuteNonQuery();
         }
-        public int updateproduct(string name, int id, string brand, string color, string conditin, string des, string bid, string price, string start, string end, int pid)
+        public int updateproduct(string name, string brand, string color, string conditin, string des, string bid, string price,  int pid)
         {
-            SqlCommand cmd = new SqlCommand("update [dbo].[Table_1] set product_name='" + name + "',brand='" + brand + "',color='" + color + "',condition='" + conditin + "',description='" + des + "',starting_bid='" + bid + "',price='" + price + "',start_time='" + start + "',end_time='" + end + "' where id='" + pid + "'", con);
+            SqlCommand cmd = new SqlCommand("update [dbo].[Table_1] set product_name='" + name + "',brand='" + brand + "',color='" + color + "',condition='" + conditin + "',description='" + des + "',starting_bid='" + bid + "',price='" + price + "' where id='" + pid + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
+        }
+        public int updateProductPrice(string price,int pid)
+        {
+            con.Close();
+            SqlCommand cmd = new SqlCommand("update [dbo].[Table_1] set price='" + price + "' where id='" + pid + "'", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
@@ -219,7 +226,7 @@ namespace demo.Models
         }
         public int addtocart(int user_id, int product_id)
         {
-
+            con.Close();
             SqlCommand cmd = new SqlCommand(" IF EXISTS " +
                 "(SELECT * from [dbo].[Cart] where user_id='" + user_id + "' and product_id='" + product_id + "')" +
                 " BEGIN " +
@@ -284,6 +291,13 @@ namespace demo.Models
         {
             con.Close();
             SqlCommand cmd = new SqlCommand("update [dbo].[UploadProduct] set num_product ='" + prodcut + "' where user_id='" + id + "'", con);
+            con.Open();
+            return cmd.ExecuteNonQuery();
+        }
+        public int updateTotal(int product,int bid, int id)
+        {
+            con.Close();
+            SqlCommand cmd = new SqlCommand("update [dbo].[UploadProduct] set total_product ='" + product + "',total_bid ='" + bid + "' where user_id='" + id + "'", con);
             con.Open();
             return cmd.ExecuteNonQuery();
         }
